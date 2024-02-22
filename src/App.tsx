@@ -8,7 +8,7 @@ import { TextContent, TextItem } from "pdfjs-dist/types/src/display/api";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
-  import.meta.url
+  import.meta.url,
 ).toString();
 
 const options = {
@@ -20,6 +20,7 @@ function App() {
   const [hasFileBeenSelected, setHasFileBeenSelected] = useState(false);
   const [numPages, setNumPages] = useState<number>();
   const [file, setFile] = useState<File | null>(null);
+  const [text, setText] = useState<string>("");
 
   function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
     setHasFileBeenSelected(true);
@@ -32,17 +33,19 @@ function App() {
     setNumPages(nextNumPages);
   }
 
-  function formatText(texts: TextContent) {
+  function formatText(text: TextContent) {
     let textFinal = "";
-    for (let i = 0; i < texts.items.length; i++) {
-      const item = texts.items[i] as TextItem;
+    for (let i = 0; i < text.items.length; i++) {
+      const item = text.items[i] as TextItem;
       textFinal += item.str;
     }
     console.log(textFinal);
+    setText(textFinal);
   }
 
   return hasFileBeenSelected ? (
     <>
+      <p>{text}</p>
       <Document
         file={file}
         onLoadSuccess={onDocumentLoadSuccess}
